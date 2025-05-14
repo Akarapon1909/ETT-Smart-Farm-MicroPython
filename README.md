@@ -26,3 +26,5 @@ SmartFarmBot is an intelligent IoT-based system that combines environmental sens
 ### MQTT Communication
     Publishes edge sensor values to specific MQTT topics
     Subscribes to weather and air quality data
+
+![Sample_Picture](Screenshot/violet_2025-05-14_12-43-48.jpg)
