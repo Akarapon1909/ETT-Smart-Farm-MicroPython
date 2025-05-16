@@ -5,15 +5,12 @@
 </head>
 <body>
 
-  <h1>🌾 ETT Smart Farm V1 Plus – Main Controller for Smart Agriculture Projects</h1>
-  <p>ETT Smart Farm V1 Plus is a microcontroller board tailored for Smart Agriculture. It integrates RS485, I²C, RTC, and relay control to support soil sensors (pH, NPK, moisture, temperature, humidity) and is ideal for real-time monitoring and automation in smart farming systems.</p>
-  <h2>📘 คู่มือการใช้งาน (Manual & Documentation)</h2>
+<h1>🌾 ETT Smart Farm V1 Plus – Main Controller for Smart Agriculture Projects</h1>
+<p>ETT Smart Farm V1 Plus is a microcontroller board tailored for Smart Agriculture. It integrates RS485, I²C, RTC, and relay control to support soil sensors (pH, NPK, moisture, temperature, humidity) and is ideal for real-time monitoring and automation in smart farming systems.</p>
+
+## 📘 คู่มือการใช้งาน (Manual & Documentation)
 
 - [🔗 คู่มือจากเว็บไซต์ ETT Smart Farm V1 Plus](https://www.etteam.com/productI2C_RS485/ET-SMART-FARM-V1P/index.html)
-
-
-
-  <hr>
 
   <h1>Installing MicroPython on ESP32 using Thonny</h1>
   <p>This guide will help you install MicroPython firmware on an ESP32 (e.g., ESP32 WROVER) using the Thonny IDE.</p>
@@ -35,11 +32,11 @@
 
   <h2>⚙️ Step 3: Select MicroPython Interpreter</h2>
   <ol>
-    <li>Open Thonny.</li>
-    <li>Go to Tools &gt; Options.</li>
-    <li>Navigate to the Interpreter tab.</li>
-    <li>Select: MicroPython (ESP32).</li>
-    <li>Select the correct port connected to your ESP32.</li>
+    1. Open Thonny.
+    2. Go to Tools &gt; Options.
+    3. Navigate to the Interpreter tab.
+    4. Select: MicroPython (ESP32).
+    5. Select the correct port connected to your ESP32.
   </ol>
 
   <hr>
@@ -85,7 +82,7 @@ Type "help()" for more information.
 
   ![Wiring Diagram](images/wiring_diagram.png)
 
-  ### Color Code for Wiring
+  ### 🧷 Color Code for Wiring
 
   - 🔴 **Red**: Power (VCC, 3.3V/5V/24V)
   - ⚫ **Black**: Ground (GND)
