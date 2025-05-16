@@ -1,7 +1,0 @@
-paho-mqtt==1.6.1
-picamera2
-pyserial
-google-auth
-google-api-python-client
-google-auth-httplib2
-google-auth-oauthlib

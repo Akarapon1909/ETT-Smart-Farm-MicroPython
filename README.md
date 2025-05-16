@@ -72,7 +72,7 @@ Type "help()" for more information.
 
   <h1>ETT-Smart Farm Wiring Diagram</h1>
   <p>This wiring diagram shows how to connect all the components.</p>
-<img src="images/wiring_diagram.png" alt="ETT-Smart Farm Wiring Diagram" width="600">
+  ![Wiring Diagram](images/wiring_diagram.png)
 
 </body>
 </html>
