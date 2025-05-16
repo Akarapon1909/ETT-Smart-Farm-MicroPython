@@ -31,11 +31,11 @@
   <hr>
 
   <h2>⚙️ Step 3: Select MicroPython Interpreter</h2>
-    <li>1. Open Thonny.</li>
-    <li>2. Go to Tools &gt; Options.</li>
-    <li>3. Navigate to the Interpreter tab.</li>
-    <li>4. Select: MicroPython (ESP32).</li>
-    <li>5. Select the correct port connected to your ESP32.</li>
+    <br>1. Open Thonny.</br>
+    <br>2. Go to Tools &gt; Options.</br>
+    <br>3. Navigate to the Interpreter tab.</br>
+    <br>4. Select: MicroPython (ESP32).</br>
+    <br>5. Select the correct port connected to your ESP32.</br>
   
 
   <hr>
