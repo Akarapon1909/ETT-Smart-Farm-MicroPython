@@ -30,22 +30,23 @@
 
   <hr>
 
-  <h2>⚙️ Step 3: Select MicroPython Interpreter</h2>
-  <ol>
-    <li>Open Thonny.</li>
-    <li>Go to Tools &gt; Options.</li>
-    <li>Navigate to the Interpreter tab.</li>
-    <li>Select: MicroPython (ESP32).</li>
-    <li>Select the correct port connected to your ESP32.</li>
-  </ol>
+<h2>⚙️ Step 3: Select MicroPython Interpreter</h2>
+<ol>
+  <li>Open Thonny.</li>
+  <li>Go to Tools &gt; Options.</li>
+  <li>Navigate to the Interpreter tab.</li>
+  <li>Select: MicroPython (ESP32).</li>
+  <li>Select the correct port connected to your ESP32.</li>
+</ol>
 
-  <hr>
+<hr>
+
 
   <h2>📥 Step 4: Download MicroPython Firmware</h2>
- <ul>
-    <li>Go to: <a href="https://micropython.org/download/ESP32_GENERIC">https://micropython.org/download/ESP32_GENERIC</a></li>
-    <li>Download the firmware that supports your board. Example: <code>ESP32_GENERIC-SPIRAM-20250415-v1.25.0.bin</code></li>
-  </ul>
+  <ul>
+      <li>Go to: <a href="https://micropython.org/download/ESP32_GENERIC">https://micropython.org/download/ESP32_GENERIC</a></li>
+      <li>Download the firmware that supports your board. Example: <code>ESP32_GENERIC-SPIRAM-20250415-v1.25.0.bin</code></li>
+    </ul>
 
   <hr>
 
@@ -71,7 +72,7 @@ Type "help()" for more information.
   </pre>
 
   <hr>
-  
+
   <h2>💡 Troubleshooting</h2>
   <p>If installation fails, press and hold the <strong>BOOT</strong> button while connecting the board to enter flashing mode.</p>
 
