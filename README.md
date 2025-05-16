@@ -83,7 +83,7 @@ Type "help()" for more information.
 
   ![Wiring Diagram](images/wiring_diagram.png)
 
-  ### 🧷 Color Code for Wiring
+  ### 🖌 Color Code for Wiring
 
   - 🔴 **Red**: Power (VCC, 3.3V/5V/24V)
   - ⚫ **Black**: Ground (GND)
