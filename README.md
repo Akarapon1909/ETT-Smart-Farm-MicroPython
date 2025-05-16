@@ -68,5 +68,11 @@ Type "help()" for more information.
   <h2>💡 Troubleshooting</h2>
   <p>If installation fails, press and hold the <strong>BOOT</strong> button while connecting the board to enter flashing mode.</p>
 
+  <hr>
+
+  <h1>ETT-Smart Farm Wiring Diagram</h1>
+  <p>This wiring diagram shows how to connect all the components.</p>
+<img src="images/wiring_diagram.png" alt="ETT-Smart Farm Wiring Diagram" width="600">
+
 </body>
 </html>
