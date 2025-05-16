@@ -5,6 +5,11 @@
 </head>
 <body>
 
+  <h1>ETT Smart Farm V1 Plus – Main Controller for Smart Agriculture Projects</h1>
+  <p>ETT Smart Farm V1 Plus is a microcontroller board tailored for Smart Agriculture. It integrates RS485, I²C, RTC, and relay control to support soil sensors (pH, NPK, moisture, temperature, humidity) and is ideal for real-time monitoring and automation in smart farming systems.</p>
+
+  <hr>
+
   <h1>Installing MicroPython on ESP32 using Thonny</h1>
   <p>This guide will help you install MicroPython firmware on an ESP32 (e.g., ESP32 WROVER) using the Thonny IDE.</p>
 
