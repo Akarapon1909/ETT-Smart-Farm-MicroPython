@@ -77,12 +77,12 @@ Type "help()" for more information.
 
   ### Color Code for Wiring
 
-  🔴 **Red**: Power (VCC, 3.3V/5V/24V)
-  ⚫ **Black**: Ground (GND)
-  🟡 **Yellow**: RS485 A+
-  🔵 **Blue**: RS485 B−
-  🟢 **Green**: SCL
-  ⚪ **White**: SDA
+  - 🔴 **Red**: Power (VCC, 3.3V/5V/24V)
+  - ⚫ **Black**: Ground (GND)
+  - 🟡 **Yellow**: RS485 A+
+  - 🔵 **Blue**: RS485 B−
+  - 🟢 **Green**: SCL
+  - ⚪ **White**: SDA
 
 </body>
 </html>
