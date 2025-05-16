@@ -12,23 +12,23 @@
 
 - [🔗 คู่มือจากเว็บไซต์ ETT Smart Farm V1 Plus](https://www.etteam.com/productI2C_RS485/ET-SMART-FARM-V1P/index.html)
 
-  <h1>Installing MicroPython on ESP32 using Thonny</h1>
-  <p>This guide will help you install MicroPython firmware on an ESP32 (e.g., ESP32 WROVER) using the Thonny IDE.</p>
+<h1>Installing MicroPython on ESP32 using Thonny</h1>
+<p>This guide will help you install MicroPython firmware on an ESP32 (e.g., ESP32 WROVER) using the Thonny IDE.</p>
 
-  <hr>
+<hr>
 
-  <h2>🧩 Step 1: Install Thonny</h2>
-  <p>Download and install the Thonny IDE from: <a href="https://thonny.org">https://thonny.org</a></p>
+<h2>🧩 Step 1: Install Thonny</h2>
+<p>Download and install the Thonny IDE from: <a href="https://thonny.org">https://thonny.org</a></p>
 
-  <hr>
+<hr>
 
-  <h2>🔌 Step 2: Connect Your ESP32</h2>
-  <ul>
-    <li>Use a USB or USB-to-TTL cable to connect your ESP32 to your computer.</li>
-    <li>Ensure the correct port (e.g., COM3, /dev/ttyUSB0) is visible.</li>
-  </ul>
+<h2>🔌 Step 2: Connect Your ESP32</h2>
+<ul>
+  <li>Use a USB or USB-to-TTL cable to connect your ESP32 to your computer.</li>
+  <li>Ensure the correct port (e.g., COM3, /dev/ttyUSB0) is visible.</li>
+</ul>
 
-  <hr>
+<hr>
 
 <h2>⚙️ Step 3: Select MicroPython Interpreter</h2>
 <ol>
