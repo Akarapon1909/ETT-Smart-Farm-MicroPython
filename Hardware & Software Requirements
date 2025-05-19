@@ -1,8 +1,7 @@
 Hardware
-- ESP32 board
+- ETT-SmartFarm V.1 Plus
 - RS485 soil sensor
-- PCF8574A I2C to Relay module
-- 7-Segment Display
+- USB-TTL UART
 
 Software & Firmware
 - Thonny IDE
