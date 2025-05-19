@@ -37,17 +37,15 @@
 
 <hr>
 
-<h2>⚙️Step 4:Flash the Firmware Using Thonny</h2>
+<h2>⚙️Step 4: Flash the Firmware Using Thonny</h2>
 <ol>
-  <li>Open Thonny.</li>
-  <li>Navigate to Tools > Install or update MicroPython firmware</li>
-  <li>Select the correct serial port and the .bin firmware file</li>
-  <li>Click Install</li>
-  <li>Set Up the Interpreter</li>
-  <li>Go to Tools > Options > Interpreter</li>
-  <li>Set Interpreter to MicroPython (ESP32)</li>
-  <li>Select the correct Port (e.g., COM3 or /dev/ttyUSB0)</li>
-  <li>Click OK</li>
+      <li>Open Thonny.</li>
+      <li>Navigate to Tools > Install or update MicroPython firmware</li>
+      <li>Select the correct serial port and the .bin firmware file</li>
+      <li>Click Install</li>
+      <li>Set Up the Interpreter</li>
+      <li>Go to Tools > Options > Interpreter</li>
+
 <p>You're Ready! Once installed, the MicroPython REPL will appear in Thonny’s shell. You can now begin writing and uploading code to your ESP32.</p>
 </ol>
 
