@@ -87,10 +87,8 @@ Type "help()" for more information.
 
   - 🔴 **Red**: Power (VCC, 3.3V/5V/24V)
   - ⚫ **Black**: Ground (GND)
-  - 🟡 **Yellow**: RS485 A+
-  - 🔵 **Blue**: RS485 B−
+  - 🔵 **Blue**: SDA
   - 🟢 **Green**: SCL
-  - ⚪ **White**: SDA
 
 </body>
 </html>
