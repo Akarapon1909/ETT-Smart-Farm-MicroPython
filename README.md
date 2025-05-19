@@ -30,10 +30,10 @@
 <hr>
 
 <h2>📥 Step 3: Download MicroPython Firmware</h2>
-  <ul>
+<ul>
       <li>Get the latest ESP32 firmware from the official site:</li>
       <li>👉<a href="https://micropython.org/download/esp32">https://micropython.org/download/esp32</a></li>
-    </ul>
+</ul>
 
 <hr>
 
