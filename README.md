@@ -24,57 +24,39 @@
 
 <h2>🔌 Step 2: Connect Your ESP32</h2>
 <ul>
-  <li>Use a USB or USB-to-TTL cable to connect your ESP32 to your computer.</li>
-  <li>Ensure the correct port (e.g., COM3, /dev/ttyUSB0) is visible.</li>
+<p>Plug your ESP32 board into your computer via USB. If it's not recognized, install the appropriate USB driver (e.g., CH340 or CP210x).</p>
 </ul>
 
 <hr>
 
-<h2>⚙️ Step 3: Select MicroPython Interpreter</h2>
+<h2>📥 Step 3: Download MicroPython Firmware</h2>
+  <ul>
+      <li>Get the latest ESP32 firmware from the official site:</li>
+      <li>👉<a href="https://micropython.org/download/esp32">https://micropython.org/download/esp32</a></li>
+    </ul>
+
+<hr>
+
+<h2>⚙️Step 4:Flash the Firmware Using Thonny</h2>
 <ol>
   <li>Open Thonny.</li>
-  <li>Go to Tools &gt; Options.</li>
-  <li>Navigate to the Interpreter tab.</li>
-  <li>Select: MicroPython (ESP32).</li>
-  <li>Select the correct port connected to your ESP32.</li>
+  <li>Navigate to Tools > Install or update MicroPython firmware</li>
+  <li>Select the correct serial port and the .bin firmware file</li>
+  <li>Click Install</li>
+  <li>Set Up the Interpreter</li>
+  <li>Go to Tools > Options > Interpreter</li>
+  <li>Set Interpreter to MicroPython (ESP32)</li>
+  <li>Select the correct Port (e.g., COM3 or /dev/ttyUSB0)</li>
+  <li>Click OK</li>
+<p>You're Ready! Once installed, the MicroPython REPL will appear in Thonny’s shell. You can now begin writing and uploading code to your ESP32.</p>
 </ol>
 
 <hr>
 
-
-  <h2>📥 Step 4: Download MicroPython Firmware</h2>
-  <ul>
-      <li>Go to: <a href="https://micropython.org/download/ESP32_GENERIC">https://micropython.org/download/ESP32_GENERIC</a></li>
-      <li>Download the firmware that supports your board. Example: <code>ESP32_GENERIC-SPIRAM-20250415-v1.25.0.bin</code></li>
-    </ul>
-
-  <hr>
-
-  <h2>🚀 Step 5: Flash MicroPython Firmware</h2>
-  <ol>
-    <li>In Thonny, go to Tools &gt; Install or update MicroPython.</li>
-    <li>Select the downloaded firmware file.</li>
-    <li>Click Install.</li>
-  </ol>
-  <ul>
-    <li>Thonny will erase the flash memory.</li>
-    <li>Thonny will install the firmware automatically.</li>
-  </ul>
-
-  <hr>
-
-  <h2>✅ Step 6: Verify Installation</h2>
-  <p>You should see this message:</p>
-  <pre>
-MicroPython v1.x.x on 202x-xx-xx; ESP32 module with ESP32
-Type "help()" for more information.
->>>
-  </pre>
-
-  <hr>
-
-  <h2>💡 Troubleshooting</h2>
-  <p>If installation fails, press and hold the <strong>BOOT</strong> button while connecting the board to enter flashing mode.</p>
+<h2>📥 Step 5: Set Interpreter to MicroPython (ESP32)</h2>
+      <li>Select the correct Port (e.g., COM3 or /dev/ttyUSB0)</li>
+      <li>Click OK</li>
+<p>You're Ready! Once installed, the MicroPython REPL will appear in Thonny’s shell. You can now begin writing and uploading code to your ESP32.</p>
 
   <hr>
 
