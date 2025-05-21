@@ -1,4 +1,4 @@
-from machine import I2C, Pin, UART
+from machine import I2C, Pin, UART, ADC
 import time, struct
 
 class Relay:
@@ -87,36 +87,35 @@ class Display:
         self._show()
         
 class SHT31:
-    def __init__(self, i2c_bus=0, scl=22, sda=21, address=0x44):
-        self.address = address
-        self.i2c = I2C(i2c_bus, scl=Pin(scl), sda=Pin(sda))
-        self.reset()
-        
-    def reset(self):
-        self.i2c.writeto(self.address, b'\x30\xA2')
-        time.sleep(0.01)
-        
-    def read(self):
-        self.i2c.writeto(self.address, b'\x24\x00')
-        time.sleep(0.5)
-        data = self.i2c.readfrom(self.address, 6)
+    def __init__(self, i2c, addr=0x44):
+        if i2c is None:
+            raise ValueError('I2C object is required')
+        self._i2c = i2c
+        self._addr = addr
 
+    def _send_command(self, command):
+        self._i2c.writeto(self._addr, command)
+
+    def _read_data(self, num_bytes):
+        return self._i2c.readfrom(self._addr, num_bytes)
+
+    def _read_raw_data(self):
+        self._send_command(b'\x24\x00')
+        time.sleep_ms(15)
+        data = self._read_data(6)
         if len(data) != 6:
-            raise Exception("Invalid data length")
-
+            raise RuntimeError("Failed to read data from SHT31 sensor")
         temp_raw = data[0] << 8 | data[1]
         hum_raw = data[3] << 8 | data[4]
+        return temp_raw, hum_raw
 
-        temperature = -45 + (175 * temp_raw / 65535.0)
-        humidity = 100 * hum_raw / 65535.0
-
-        return temperature, humidity
-    
     def temperature(self):
-        return self.read()[0]
+        temp_raw, _ = self._read_raw_data()
+        return -45 + (175 * (temp_raw / 65535.0))
 
     def humidity(self):
-        return self.read()[1]
+        _, hum_raw = self._read_raw_data()
+        return 100 * (hum_raw / 65535.0)
     
 class RS485:
     def __init__(self, tx=27, rx=26, baudrate=9600, slave_id=1):
@@ -166,21 +165,53 @@ class RS485:
         return self.read_all().get(name, None)
     
 class BH1750:
-    def __init__(self, i2c_bus=0, scl=22, sda=21, address=0x23):
+    PWR_DOWN = 0x00
+    PWR_ON = 0x01
+    RESET = 0x07
+    CONT_HIRES_1 = 0x10
+
+    def __init__(self, i2c, address=0x23):
+        self.i2c = i2c
         self.address = address
-        self.i2c = I2C(i2c_bus, scl=Pin(scl), sda=Pin(sda))
-        self._setup()
-        
-    def _setup(self):
-        self.i2c.writeto(self.address, b'\x01')  
-        time.sleep(0.01)
-        self.i2c.writeto(self.address, b'\x10')  
-        time.sleep(0.2)
-        
-    def lux(self):
-        data = self.i2c.readfrom(self.address, 2)
-        result = (data[0] << 8) | data[1]
-        return result / 1.2  
+        self._configure()
+
+    def _configure(self):
+        try:
+            self.i2c.writeto(self.address, bytes([self.PWR_ON]))
+            time.sleep_ms(10)
+            self.i2c.writeto(self.address, bytes([self.RESET]))
+            time.sleep_ms(10)
+            self.i2c.writeto(self.address, bytes([self.CONT_HIRES_1]))
+            time.sleep_ms(180)
+        except Exception as e:
+            print("BH1750 configuration error:", e)
+
+    def read_lux(self):
+        try:
+            data = self.i2c.readfrom(self.address, 2)
+            result = (data[0] << 8) | data[1]
+            return result / 1.2  # Convert to Lux
+        except Exception as e:
+            print("BH1750 read error:", e)
+            return None
 
 class button:
-    
+    i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=100000)
+    address = 0x3B
+    print(i2c.scan())
+    # Set all pins to HIGH to enable input mode
+    i2c.writeto(address, bytes([0xFF]))
+
+    # Loop to read input pin states
+    while True:
+        data = i2c.readfrom(address, 1)  # returns a byte object
+        pin_states = data[0]            # convert to integer
+        # Check each specific pin (bitmasking)
+        pin1 = (pin_states >> 7) & 1  # P1
+        pin2 = (pin_states >> 5) & 1  # P2
+        pin3 = (pin_states >> 3) & 1  # P3
+        pin4 = (pin_states >> 1) & 1  # P4
+
+        print("Pin states: P1 =", pin1, "P2 =", pin2, "P3 =", pin3, "P4 =", pin4)
+        time.sleep(0.5)
+
