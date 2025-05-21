@@ -1,5 +1,75 @@
 from machine import I2C, Pin, UART, ADC
-import time, struct
+from umqtt.simple import MQTTClient
+import time, struct, network
+
+class Wifi:
+    def __init__(self, ssid, password, mqtt_broker, mqtt_port, mqtt_client, mqtt_user, mqtt_pass, topic_sub=None, callback=None):
+        self.ssid = ssid
+        self.password = password
+        self.mqtt_broker = mqtt_broker
+        self.mqtt_port = mqtt_port
+        self.mqtt_client = mqtt_client
+        self.mqtt_user = mqtt_user
+        self.mqtt_pass = mqtt_pass
+        self.topic_sub = topic_sub
+        self.callback = callback
+        self.client = None
+        
+    def connect_wifi(self):
+        wlan = network.WLAN(network.STA_IF)
+        wlan.active(True)
+        if not wlan.isconnected():
+            print("Connecting to WiFi...")
+            wlan.connect(self.ssid, self.password)
+            retry = 0
+            while not wlan.isconnected() and retry < 10:
+                time.sleep(2)
+                retry += 1
+                print("Retry", retry)
+        print("WiFi connected:", wlan.ifconfig())
+        
+    def connect_mqtt(self):
+        self.client = MQTTClient(self.mqtt_client, self.mqtt_broker, port=self.mqtt_port,
+                                 user=self.mqtt_user, password=self.mqtt_pass)
+        if self.callback:
+            self.client.set_callback(self.callback)
+
+        print("Connecting to MQTT broker...")
+        self.client.connect()
+        print("MQTT connected.")
+
+        if self.topic_sub:
+            self.client.subscribe(self.topic_sub)
+            print("Subscribed to:", self.topic_sub)
+
+    def check_msg(self):
+        if self.client:
+            self.client.check_msg()
+
+    def publish(self, topic, msg):
+        if self.client:
+            self.client.publish(topic, msg)
+            
+    def auto_loop(self, publish_callback, interval_ms=5000):
+        last = time.ticks_ms()
+        while True:
+            if not self.client:
+                self.connect_mqtt()
+
+            self.check_msg()
+
+            now = time.ticks_ms()
+            if time.ticks_diff(now, last) > interval_ms:
+                publish_callback()
+                last = now
+
+            time.sleep(0.5)
+
+            try:
+                self.client.ping()
+            except:
+                print("MQTT disconnected. Reconnecting...")
+                break
 
 class Relay:
     def __init__(self, i2c, address=0x38):
