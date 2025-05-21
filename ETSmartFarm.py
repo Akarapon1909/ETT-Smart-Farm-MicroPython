@@ -195,23 +195,25 @@ class BH1750:
             print("BH1750 read error:", e)
             return None
 
-class button:
-    i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=100000)
-    address = 0x3B
-    print(i2c.scan())
-    # Set all pins to HIGH to enable input mode
-    i2c.writeto(address, bytes([0xFF]))
+class Button:
+    def __init__(self, i2c_id=0, scl=22, sda=21, address=0x3B):
+        self.i2c = I2C(i2c_id, scl=Pin(scl), sda=Pin(sda), freq=100_000)
+        self.address = address
+        
+        print("I2C Scan:", self.i2c.scan())
+        self.i2c.writeto(self.address, bytes([0xFF]))
+        
+    def read_buttons(self):
+        try:
+            data = self.i2c.readfrom(self.address, 1)
+            pin_states = data[0]
 
-    # Loop to read input pin states
-    while True:
-        data = i2c.readfrom(address, 1)  # returns a byte object
-        pin_states = data[0]            # convert to integer
-        # Check each specific pin (bitmasking)
-        pin1 = (pin_states >> 7) & 1  # P1
-        pin2 = (pin_states >> 5) & 1  # P2
-        pin3 = (pin_states >> 3) & 1  # P3
-        pin4 = (pin_states >> 1) & 1  # P4
-
-        print("Pin states: P1 =", pin1, "P2 =", pin2, "P3 =", pin3, "P4 =", pin4)
-        time.sleep(0.5)
-
+            return {
+                "P1": (pin_states >> 7) & 1,
+                "P2": (pin_states >> 5) & 1,
+                "P3": (pin_states >> 3) & 1,
+                "P4": (pin_states >> 1) & 1
+            }
+        except Exception as e:
+            print("Read error:", e)
+            return {"P1": 1, "P2": 1, "P3": 1, "P4": 1}
