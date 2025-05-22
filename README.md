@@ -6,7 +6,8 @@ ETT Smart Farm V1 Plus is a microcontroller board tailored for Smart Agriculture
 
 ## 📘 Manual & Documentation
 
-Documentation is available at [🔗 Documentation From ETT Smart Farm V1 Plus](https://www.etteam.com/productI2C_RS485/ET-SMART-FARM-V1P/index.html)
+Documentation is available at 
+👉 [🔗 Documentation From ETT Smart Farm V1 Plus](https://www.etteam.com/productI2C_RS485/ET-SMART-FARM-V1P/index.html)
 
 ---
 
@@ -26,8 +27,8 @@ If it's not recognized, install the appropriate USB driver (e.g., CH340 or CP210
 
 ## 📥 Step 3: Download MicroPython Firmware
 
-- Get the latest ESP32 firmware from the official site:  
-  👉 [https://micropython.org/download/esp32](https://micropython.org/download/esp32)
+Get the latest ESP32 firmware from the official site:  
+👉 [https://micropython.org/download/esp32](https://micropython.org/download/esp32)
 
 ---
 
