@@ -1,7 +1,18 @@
 from machine import I2C, Pin, UART, ADC
 from umqtt.simple import MQTTClient
+from micropython import const
 import time, struct, network
 
+DATETIME_REG = const(0x00)
+
+def bcdtodec(bcd):
+    return (bcd >> 4) * 10 + (bcd & 0x0F)
+
+def dectobcd(dec):
+    return ((dec // 10) << 4) | (dec % 10)
+
+# WiFi and MQTT
+#------------------------------------
 class Wifi:
     def __init__(self, ssid, password, mqtt_broker, mqtt_port, mqtt_client, mqtt_user, mqtt_pass, topic_sub=None, callback=None):
         self.ssid = ssid
@@ -71,6 +82,8 @@ class Wifi:
                 print("MQTT disconnected. Reconnecting...")
                 break
 
+# Relay
+#------------------------------------
 class Relay:
     def __init__(self, i2c, address=0x38):
         self.i2c = i2c
@@ -106,10 +119,70 @@ class Relay:
     def off_all(self):
         self.state = 0xFF
         self._write_state()
-    
+
+
+# DS3231
+#------------------------------------
+class DS3231:
+    def __init__(self, i2c, addr=0x68):
+        self.i2c = i2c
+        self.addr = addr
+        self._timebuf = bytearray(7)
+        
+    def read_time(self):
+        try:
+            y, m, d, dow, h, mi, s, _ = self.datetime()
+            return "{:02}{:02}".format(h, mi)
+        except Exception as e:
+            print("[RTC Error]", e)
+            return "0000"
+
+    def datetime(self, datetime=None):
+        if datetime is None:
+            self.i2c.readfrom_mem_into(self.addr, DATETIME_REG, self._timebuf)
+            seconds = bcdtodec(self._timebuf[0])
+            minutes = bcdtodec(self._timebuf[1])
+            if (self._timebuf[2] & 0x40):
+                hour = bcdtodec(self._timebuf[2] & 0x1F)
+                if self._timebuf[2] & 0x20:
+                    hour += 12
+            else:
+                hour = bcdtodec(self._timebuf[2] & 0x3F)
+            weekday = bcdtodec(self._timebuf[3])
+            day = bcdtodec(self._timebuf[4])
+            month = bcdtodec(self._timebuf[5] & 0x7F)
+            year = bcdtodec(self._timebuf[6]) + 2000
+            if self.OSF():
+                print("WARNING: Oscillator stop flag set. Time may not be accurate.")
+            return (year, month, day, weekday, hour, minutes, seconds, 0)
+
+        try: self._timebuf[3] = dectobcd(datetime[6])
+        except IndexError: self._timebuf[3] = 0
+        try: self._timebuf[0] = dectobcd(datetime[5])
+        except IndexError: self._timebuf[0] = 0
+        self._timebuf[1] = dectobcd(datetime[4])
+        self._timebuf[2] = dectobcd(datetime[3])
+        self._timebuf[4] = dectobcd(datetime[2])
+        self._timebuf[5] = dectobcd(datetime[1])
+        self._timebuf[6] = dectobcd(datetime[0] % 100)
+        self.i2c.writeto_mem(self.addr, DATETIME_REG, self._timebuf)
+        self._OSF_reset()
+        return True
+
+    def OSF(self):
+        reg = self.i2c.readfrom_mem(self.addr, 0x0F, 1)[0]
+        return bool(reg & 0x80)
+
+    def _OSF_reset(self):
+        reg = self.i2c.readfrom_mem(self.addr, 0x0F, 1)[0]
+        self.i2c.writeto_mem(self.addr, 0x0F, bytes([reg & ~0x80]))
+
+
+# Display
+#------------------------------------
 class Display:
     DIGIT_ORDER = [0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15]
-    
+
     CHAR_MAP = {
         ' ': 0x00, '-': 0x40,
         '0': 0x3F, '1': 0x06, '2': 0x5B, '3': 0x4F,
@@ -118,46 +191,66 @@ class Display:
         'E': 0x79, 'F': 0x71, 'H': 0x76, 'L': 0x38, 'P': 0x73,
         'S': 0x6D, 'U': 0x3E, 'T': 0x78, 'M': 0x37, 'c': 0x58
     }
-    
-    def __init__(self, i2c_bus=0, scl_pin=22, sda_pin=21, address=0x70):
-        self.i2c = I2C(i2c_bus, scl=Pin(scl_pin), sda=Pin(sda_pin))
-        self.address = address
+
+    def __init__(self, i2c):
+        self.i2c = i2c
+        self.address = 0x70
         self.buffer = bytearray(16)
         self._setup()
-        
+
     def _setup(self):
-        self.i2c.writeto(self.address, b'\x21')  
-        self.i2c.writeto(self.address, b'\x81')  
+        self.i2c.writeto(self.address, b'\x21')
+        self.i2c.writeto(self.address, b'\x81')
         self.i2c.writeto(self.address, b'\xEF')
 
     def clear(self):
         self.buffer = bytearray(16)
-        self._show()
-        
-    def _show(self):
+        self.show()
+
+    def show(self):
         self.i2c.writeto_mem(self.address, 0x00, self.buffer)
-        
-    def _encode_char(self, char, with_dot=False):
+
+    def encode_char(self, char, with_dot=False):
         base = self.CHAR_MAP.get(char.upper(), 0x00)
         return base | 0x80 if with_dot else base
-    
-    def print(self, text: str):
-        text = str(text)
-        pos = 0
-        i = 0
-        while i < len(text) and pos < 16:
-            char = text[i]
-            if (i + 1 < len(text)) and text[i + 1] == '.':
-                self.buffer[self.DIGIT_ORDER[pos]] = self._encode_char(char, with_dot=True)
-                i += 2
-            else:
-                self.buffer[self.DIGIT_ORDER[pos]] = self._encode_char(char)
-                i += 1
-            pos += 1
-        self._show()
+
+    def print16(self, time_str, temp_str, humi_str, soil_str):
+        self.clear()
+        all_lines = [time_str, temp_str, humi_str, soil_str]
         
+        pos = 0
+        for line in all_lines:
+            i = 0
+            while i < len(line) and pos < 16:
+                char = line[i]
+                if i + 1 < len(line) and line[i + 1] == '.':
+                    self.buffer[self.DIGIT_ORDER[pos]] = self.encode_char(char, with_dot=True)
+                    i += 2
+                else:
+                    self.buffer[self.DIGIT_ORDER[pos]] = self.encode_char(char)
+                    i += 1
+                pos += 1
+
+        self.show()
+        
+    def set_colon(self, is_set=True):
+        self.buffer[4] = 0x02 if is_set else 0x00
+        self.show()
+        
+    def format_display_line(self, time_str, temp, humi, soil):
+        try:
+            temp_str = "{:02.0f}".format(temp)
+            humi_str = "{:02.0f}".format(humi)
+            soil_str = "{:02.0f}".format(soil['moisture'])
+            return time_str + temp_str + humi_str + soil_str
+        except Exception as e:
+            print("[Display Format Error]", e)
+            return "000000000000"
+
+# SHT31
+#------------------------------------ 
 class SHT31:
-    def __init__(self, i2c, addr=0x44):
+    def __init__(self, i2c, addr=0x45):
         if i2c is None:
             raise ValueError('I2C object is required')
         self._i2c = i2c
@@ -179,6 +272,16 @@ class SHT31:
         hum_raw = data[3] << 8 | data[4]
         return temp_raw, hum_raw
 
+    def read(self):
+        """Returns temperature and humidity as a tuple"""
+        try:
+            temp = self.temperature()
+            humi = self.humidity()
+            return round(temp, 1), round(humi, 1)
+        except Exception as e:
+            print("[SHT31] Error:", e)
+            return None, None
+
     def temperature(self):
         temp_raw, _ = self._read_raw_data()
         return -45 + (175 * (temp_raw / 65535.0))
@@ -186,7 +289,9 @@ class SHT31:
     def humidity(self):
         _, hum_raw = self._read_raw_data()
         return 100 * (hum_raw / 65535.0)
-    
+
+# RS485
+#------------------------------------    
 class RS485:
     def __init__(self, tx=27, rx=26, baudrate=9600, slave_id=1):
         self.uart = UART(2, baudrate=baudrate, tx=tx, rx=rx)
@@ -233,7 +338,9 @@ class RS485:
     
     def read_column(self, name: str):
         return self.read_all().get(name, None)
-    
+
+# BH1750
+#------------------------------------
 class BH1750:
     PWR_DOWN = 0x00
     PWR_ON = 0x01
@@ -265,6 +372,8 @@ class BH1750:
             print("BH1750 read error:", e)
             return None
 
+# Button
+#------------------------------------
 class Button:
     def __init__(self, i2c_id=0, scl=22, sda=21, address=0x3B):
         self.i2c = I2C(i2c_id, scl=Pin(scl), sda=Pin(sda), freq=100_000)
